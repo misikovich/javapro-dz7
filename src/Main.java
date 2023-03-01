@@ -5,13 +5,13 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         Book theLostManBook = new Book(sc.nextLine());
-        theLostManBook.countPopularWords(2);
-        theLostManBook.countUniqueWords();
+        System.out.println(theLostManBook.countPopularWords(2));
+        System.out.println(theLostManBook.countUniqueWords());
         theLostManBook.printStatistics();
 
         Book watershipDownBook = new Book(sc.nextLine());
-        watershipDownBook.countPopularWords(2);
-        watershipDownBook.countUniqueWords();
+        System.out.println(watershipDownBook.countPopularWords(2));
+        System.out.println(watershipDownBook.countUniqueWords());
         watershipDownBook.printStatistics();
     }
 }

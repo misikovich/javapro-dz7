@@ -7,30 +7,26 @@ import java.util.stream.Collectors;
 
 public class Book {
     private static final String directory = Paths.get(System.getProperty("user.dir"), "/src/books").toString();
-    private String bookName;
-    private final Path path;
+    private final String bookName;
     private final StringBuilder text;
 
-    private final StringBuilder statistics;
+    private final Statistics statistics;
 
-    public Book(String p) {
-        path = Paths.get(directory, p);
+    public Book(String bookName) {
+        Path path = Paths.get(directory, bookName);
         text = new StringBuilder();
-        statistics = new StringBuilder();
-        bookName = p;
+        statistics = new Statistics(path);
+        this.bookName = bookName;
 
         try (BufferedReader bookReader =
                      new BufferedReader(new FileReader(path.toFile()))) {
             bookReader.lines().forEach(text::append);
         } catch (FileNotFoundException e) {
-            System.out.printf("Book '%s' was not found\n", bookName);
-            statistics.append("Book was not found\n");
+            System.out.printf("Book '%s' was not found\n", this.bookName);
+            statistics.addStatistics("Book was not found");
         } catch (IOException e) {
-            statistics.append(e.getMessage());
+            statistics.addStatistics(e.getMessage());
             e.printStackTrace();
-        }
-        finally {
-            writeStatsToFile();
         }
     }
 
@@ -59,8 +55,7 @@ public class Book {
                 .map(Map.Entry::getKey)
                 .toList();
 
-        statistics.append(strings).append("\n");
-        writeStatsToFile();
+        statistics.addStatistics("Popular words:\n" + strings);
         return strings;
     }
 
@@ -69,30 +64,13 @@ public class Book {
                 .map(String::toLowerCase)
                 .distinct()
                 .count();
-        statistics.append(uniqueCount).append("\n");
-        writeStatsToFile();
+        statistics.addStatistics("Unique words count: " + uniqueCount);
         return uniqueCount;
     }
 
-    public void writeStatsToFile() {
-        File statFile = Paths.get(directory, path.getFileName().toString() + "_statistic.txt").toFile();
-        try {
-            statFile.createNewFile();
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(statFile))) {
-                bufferedWriter.write(statistics.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            System.out.println(statFile.getAbsolutePath());
-            e.printStackTrace();
-        }
-
-    }
 
     public void printStatistics() {
-        System.out.printf("\n'%s' stats: \n", bookName);
-        Arrays.stream(statistics.toString().split("\n"))
-                .forEach(System.out::println);
+        System.out.printf("\nBook '%s' stats: \n", bookName);
+        System.out.println(statistics.getStatistics());
     }
 }
