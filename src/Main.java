@@ -13,5 +13,6 @@ public class Main {
         System.out.println(watershipDownBook.countPopularWords(2));
         System.out.println(watershipDownBook.countUniqueWords());
         watershipDownBook.printStatistics();
+        
     }
 }
