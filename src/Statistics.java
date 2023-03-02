@@ -10,14 +10,17 @@ import java.util.List;
 public class Statistics {
     private final Path path;
     private final List<String> statistics;
+    private final boolean exists;
 
     public Statistics(Path path) {
-        this.path = Paths.get(path.toString() + "_statistic.txt");
+        this.exists = path.toFile().exists();
+        this.path = Paths.get(path + "_statistic.txt");
         statistics = new ArrayList<>();
 
     }
 
     public void addStatistics(String stat) {
+        if (!exists) return;
         statistics.add(stat);
         writeToFile();
     }
@@ -27,9 +30,11 @@ public class Statistics {
     }
 
     private void writeToFile() {
+        if (!exists) return;
+
         File statFile = path.toFile();
         try {
-           statFile.createNewFile();
+            statFile.createNewFile();
             try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(statFile))) {
                 bufferedWriter.write(getStatistics());
             } catch (IOException e) {

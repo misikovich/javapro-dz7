@@ -1,17 +1,17 @@
 import java.util.Scanner;
 
 public class Main {
+    static final String quitCmd = "q:";
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        Book theLostManBook = new Book(sc.nextLine());
-        System.out.println(theLostManBook.countPopularWords(2));
-        System.out.println(theLostManBook.countUniqueWords());
-        theLostManBook.printStatistics();
+        for (String userLine; !(userLine = sc.nextLine()).equals(quitCmd); System.out.printf("\nType '%s' to exit\n", quitCmd)) {
+            Book userBook = new Book(userLine);
 
-        Book watershipDownBook = new Book(sc.nextLine());
-        System.out.println(watershipDownBook.countPopularWords(2));
-        System.out.println(watershipDownBook.countUniqueWords());
-        watershipDownBook.printStatistics();
+            System.out.println(userBook.countPopularWords(2, 20));
+            System.out.println(userBook.countUniqueWords());
+            userBook.printStatistics();
+        }
     }
 }
